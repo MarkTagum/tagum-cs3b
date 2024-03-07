@@ -74,10 +74,7 @@ def check_primitive_root(q, g):
 p = st.number_input("Primitive Number:", min_value=2, step=1)
 g = st.number_input("Primitive Root:", min_value=1, step=1)
 
-
-
-
-if st.button("Enter"):
+if st.button("Check Primitive Root"):
     is_primitive, primitive_roots = check_primitive_root(p, g)
     if is_prime(p):
         if is_primitive:
