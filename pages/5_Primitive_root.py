@@ -71,8 +71,8 @@ def check_primitive_root(q, g):
         return False, primitive_roots
 
 # Example Usage:    
-p = int(st.text_area("Primitive Number:").encode())
-g = int(st.text_area("Primitive Root of q:").encode())
+p = bytes(st.text_area("Primitive Number:").encode())
+g = bytes(st.text_area("Primitive Root of q:").encode())
 
 
 
