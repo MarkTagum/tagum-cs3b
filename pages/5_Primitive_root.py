@@ -78,9 +78,9 @@ if st.button("Check Primitive Root"):
     is_primitive, primitive_roots = check_primitive_root(p, g)
     if is_prime(p):
         if is_primitive:
-            st.write(f"{g} is primitive root: {is_primitive} {primitive_roots}")
+            st.success(f"{g} is primitive root: {is_primitive} {primitive_roots}")
         else:   
-            st.write(f"{g} is NOT primitive root of {p} - List of Primitive roots: {primitive_roots}")
+            st.error(f"{g} is NOT primitive root of {p} - List of Primitive roots: {primitive_roots}")
 
     else:
-        st.write(f"{p} is not a prime number!!")
+        st.error(f"{p} is not a prime number!!")
