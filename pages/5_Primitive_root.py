@@ -72,7 +72,7 @@ def check_primitive_root(q, g):
 
 # Example Usage:    
 p = bytes(st.text_area("Primitive Number:").encode())
-g = bytes(st.text_area("Primitive Root of q:").encode())
+g = bytes(st.text_area("Primitive Root:").encode())
 
 
 
