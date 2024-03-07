@@ -75,9 +75,8 @@ p = bytes(st.text_area("Primitive Number:").encode())
 g = bytes(st.text_area("Primitive Root:").encode())
 
 
-
+is_primitive, primitive_roots = check_primitive_root(p, g)
 if st.button("Enter"):
-    is_primitive, primitive_roots = check_primitive_root(p, g)
     if is_prime(p):
         if is_primitive:
             st.write(f"{g} is primitive root: {is_primitive} {primitive_roots}")
