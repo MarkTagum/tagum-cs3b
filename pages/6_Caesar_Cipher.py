@@ -33,7 +33,7 @@ def main():
     shift_keys = st.text_input("Enter numbers (comma-separated):")
     try:
         # Convert the input string to a list of integers
-        selected_numbers = list(map(int, numbers_str.split(',')))
+        selected_numbers = list(map(int, shift_keys.split(',')))
     except ValueError:
         # Handle the case where input is not a valid list of numbers
         selected_numbers = []
