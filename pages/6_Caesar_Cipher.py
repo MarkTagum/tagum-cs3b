@@ -29,8 +29,14 @@ def encrypt_decrypt(text, shift_keys, ifdecrypt):
 def main():
     
     # Example usage
-    text = st.text_input("Enter shift keys (space-separated):")
-    shift_keys = list(map(int, text.split()))
+    text = bytes(st.text_area("Enter shift keys (space-separated):").encode())
+    shift_keys = st.text_input("Enter numbers (comma-separated):")
+    try:
+        # Convert the input string to a list of integers
+        selected_numbers = list(map(int, numbers_str.split(',')))
+    except ValueError:
+        # Handle the case where input is not a valid list of numbers
+        selected_numbers = []
     
     encrypted_text = encrypt_decrypt(text, shift_keys, False)
     st.write("----------")
