@@ -29,7 +29,7 @@ def encrypt_decrypt(text, shift_keys, ifdecrypt):
 def main():
     
     # Example usage
-    shift_keys_str = st.text_input("Enter shift keys (space-separated):")
+    text = st.text_input("Enter shift keys (space-separated):")
     shift_keys = list(map(int, shift_keys_str.split()))
     
     encrypted_text = encrypt_decrypt(text, shift_keys, False)
