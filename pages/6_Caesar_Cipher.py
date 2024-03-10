@@ -30,7 +30,7 @@ def main():
     
     # Example usage
     text = st.text_input("Enter shift keys (space-separated):")
-    shift_keys = list(map(int, shift_keys_str.split()))
+    shift_keys = list(map(int, text.split()))
     
     encrypted_text = encrypt_decrypt(text, shift_keys, False)
     st.write("----------")
