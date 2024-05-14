@@ -30,17 +30,17 @@ def main():
   key = st.session_state['secret_key']
 
   # Text input for message
-  message = st.text_input("Enter a message to encrypt/decrypt:")
+  message = st.text_input("Enter a message:")
 
-  # Encryption/Decryption buttons
+  # Radio button for selection (more user-friendly)
+  action = st.radio("Action:", ("Encrypt", "Decrypt"))
+
+  # Encryption/Decryption based on selection
   if message:
-    encrypt_button = st.button("Encrypt")
-    decrypt_button = st.button("Decrypt")
-
-    if encrypt_button:
+    if action == "Encrypt":
       encrypted_message = encrypt_message(message, key)
       st.write("Encrypted message:", encrypted_message)
-    elif decrypt_button:
+    elif action == "Decrypt":
       try:
         decrypted_message = decrypt_message(message, key)
         st.write("Decrypted message:", decrypted_message)
