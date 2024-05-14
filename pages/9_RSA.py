@@ -2,6 +2,7 @@ import streamlit as st
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat, PrivateFormat
+from cryptography.hazmat.backends import default_backend
 
 def generate_rsa_key_pair(public_exponent=65537):
     """Generates an RSA key pair with a specified public exponent."""
