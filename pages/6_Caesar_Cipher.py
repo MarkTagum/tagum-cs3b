@@ -37,19 +37,23 @@ except ValueError:
   shift_keys = []
   st.error("Invalid input: Please enter comma-separated integers for shift keys.")
 
-# Button to trigger encryption/decryption
-if st.button("Process Text"):
+# Separate buttons for encryption and decryption
+if st.button("Encrypt Text"):
   # Check if any shift keys are provided
   if not shift_keys:
     st.error("Please enter valid shift keys.")
   else:
     # Encrypt the text
     encrypted_text = encrypt_decrypt(text, shift_keys, False)
-    # Decrypt the encrypted text (demonstration)
-    decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, True)
-
-    # Display results
-    st.write("Original Text:", text)
-    st.write("Shift Keys:", ", ".join(map(str, shift_keys)))
+    # Display encrypted text
     st.write("Encrypted Text:", encrypted_text)
+
+if st.button("Decrypt Text"):
+  # Check if any shift keys are provided
+  if not shift_keys:
+    st.error("Please enter valid shift keys.")
+  else:
+    # Decrypt the text
+    decrypted_text = encrypt_decrypt(text, shift_keys, True)
+    # Display decrypted text
     st.write("Decrypted Text:", decrypted_text)
