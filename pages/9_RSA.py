@@ -1,5 +1,4 @@
 import streamlit as st
-import cryptography.hazmat.primitives
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat, PrivateFormat
