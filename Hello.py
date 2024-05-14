@@ -27,11 +27,5 @@ def run():
     st.write("by: MARK B. TAGUM")
 
 
-
-    st.markdown(
-       
-    )
-
-
 if __name__ == "__main__":
     run()
