@@ -18,7 +18,7 @@ def hash_text(text):
       encoded_char = char.encode()
       if char.isspace():
         char_hash = hashlib.sha1(b"<space>").hexdigest().upper()
-        st.write(f"{char_hash} <space>")
+        st.write(f"{char_hash}")
       else:
         char_hash = hashlib.sha1(encoded_char).hexdigest().upper()
         st.write(f"{char_hash} {char}")
