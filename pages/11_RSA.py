@@ -1,112 +1,54 @@
 import streamlit as st
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from cryptography.hazmat.primitives import serialization
-from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.backends import default_backend
 
+# Placeholder functions for key generation and encryption/decryption
+def generate_keypair():
+  # Implement logic to generate RSA keypair using a library like Cryptography
+  # This should return public and private keys in PEM format
+  pass
 
-def generate_rsa_keypair():
-  """Generates an RSA key pair (private and public keys).
+def encrypt(message, public_key):
+  # Implement logic to encrypt message using the public key
+  # This should return the encrypted message
+  pass
 
-  Returns:
-      A tuple containing the private key (PEM-encoded) and public key (PEM-encoded).
-  """
-  try:
-      # Attempt using default_backend
-      private_key = rsa.generate_private_key(
-          public_exponent=65537,
-          key_size=2048,
-          backend=default_backend()
-      )
-  except NameError:  # If default_backend not found, use system-wide backend
-      print("WARNING: cryptography.hazmat.backends.default_backend not found, using system-wide backend.")
-      private_key = rsa.generate_private_key(
-          public_exponent=65537,
-          key_size=2048
-      )
-  public_key = private_key.public_key()
-  private_pem = private_key.private_bytes(
-      encoding=serialization.Encoding.PEM,
-      format=serialization.PrivateFormat.PKCS8,
-      encryption_algorithm=serialization.NoEncryption()
-  )
-  public_pem = public_key.public_bytes(
-      encoding=serialization.Encoding.PEM,
-      format=serialization.PublicFormat.SubjectPublicKeyInfo
-  )
-  return private_pem, public_pem
+def decrypt(ciphertext, private_key):
+  # Implement logic to decrypt ciphertext using the private key
+  # This should return the decrypted message
+  pass
 
+# State variables
+mode = "encrypt"  # Default mode
+uploaded_key = None
 
-def rsa_encrypt(public_pem, message):
-  """Encrypts a message using an RSA public key.
-
-  Args:
-      public_pem: The PEM-encoded public key.
-      message: The message to encrypt (bytes).
-
-  Returns:
-      The encrypted message (bytes).
-  """
-  public_key = serialization.load_pem_public_key(
-      public_pem,
-      backend=default_backend()
-  )
-  ciphertext = public_key.encrypt(
-      message,
-      padding.OAEP(
-          mgf=padding.MGF1(algorithm=hashes.SHA256()),
-          algorithm=hashes.SHA256(),
-          label=None
-      )
-  )
-  return ciphertext
-
-
-def rsa_decrypt(private_pem, ciphertext):
-  """Decrypts a message using an RSA private key.
-
-  Args:
-      private_pem: The PEM-encoded private key.
-      ciphertext: The encrypted message (bytes).
-
-  Returns:
-      The decrypted message (bytes).
-  """
-  private_key = serialization.load_pem_private_key(
-      private_pem,
-      password=None,
-      backend=default_backend()
-  )
-  original_message = private_key.decrypt(
-      ciphertext,
-      padding.OAEP(
-          mgf=padding.MGF1(algorithm=hashes.SHA256()),
-          algorithm=hashes.SHA256(),
-          label=None
-      )
-  )
-  return original_message.decode()  # Decode decrypted message to string
-
-
-# Streamlit app
 st.title("RSA Encryption/Decryption")
 
-# Key generation (optional, pre-generated keys can be used)
-generate_keypair = st.checkbox("Generate Key Pair", value=False)
-if generate_keypair:
-  if st.button("Generate Keys"):
-    try:
-      private_pem, public_pem = generate_rsa_keypair()
-      st.success("Key pair generated!")
-      st.write("**Download Private Key (Keep Secret):**", download_data=private_pem, file_name="private_key.pem")
-      st.code(public_pem.decode())  # Display public key in code block
-    except Exception as e:
-      st.error(f"Error generating key pair: {e}")
-else:
-  # Input fields for pre-generated keys
-  private_key_file = st.file_uploader("Upload Private Key (PEM)", type="pem")
-  public_key_area = st.text_area("Public Key (PEM)", height=100)
+# Key generation and download button
+if st.button("Generate Keypair"):
+  public_key, private_key = generate_keypair()
+  # Download logic for PEM formatted keys (implement download functionality)
+  st.write("Keys generated. Download links will be provided soon.")
 
-  if private_key_file is not None and public_key_area:
-    private_pem = private_key_file.read()
+# Upload key button
+uploaded_file = st.file_uploader("Upload Public/Private Key (PEM)", type=["pem"])
+if uploaded_file is not None:
+  uploaded_key = uploaded_file.read().decode("utf-8")
+
+# Mode selection
+mode = st.selectbox("Select Mode", ["encrypt", "decrypt"])
+
+# Input field for message
+message = st.text_area("Enter message to encrypt/decrypt", key="message")
+
+# Encryption/Decryption based on mode
+if mode == "encrypt":
+  if uploaded_key is not None and message:
+    ciphertext = encrypt(message, uploaded_key)
+    st.write("Encrypted message:", ciphertext)
+else:
+  if uploaded_key is not None and message:
+    decrypted_message = decrypt(message, uploaded_key)
+    st.write("Decrypted message:", decrypted_message)
+  else:
+    st.warning("Please upload a private key and provide ciphertext for decryption")
+
+st.write("**Note:** This is a simplified example. Real-world implementations should use secure libraries and best practices for cryptography.")
