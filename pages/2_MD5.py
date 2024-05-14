@@ -1,4 +1,5 @@
 import hashlib
+import streamlit as st
 
 def hash_text(text):
   """Hashes the provided text using MD5 and returns the hexadecimal digest.
@@ -31,16 +32,25 @@ def hash_file(filepath):
       hasher.update(data)
       return hasher.hexdigest()
   except FileNotFoundError:
-    print(f"Error: File not found - {filepath}")
+    st.error(f"Error: File not found - {filepath}")
     return None
 
-# Example usage for text hashing
-text = "This is some text to hash with MD5."
-text_hash = hash_text(text)
-print(f"MD5 Hash of Text: {text_hash}")
+st.title("MD5 Hashing Tool")
 
-# Example usage for file hashing (replace 'your_file.txt' with your actual file)
-file_path = "your_file.txt"
-file_hash = hash_file(file_path)
-if file_hash:
-  print(f"MD5 Hash of File ({file_path}): {file_hash}")
+# Text input with label
+text_input = st.text_area("Enter Text to Hash:")
+
+# File upload with label
+uploaded_file = st.file_uploader("Choose a File to Hash:")
+
+# Hash button
+if st.button("Hash"):
+  if text_input:
+    text_hash = hash_text(text_input)
+    st.write("MD5 Hash of Text:", text_hash)
+  elif uploaded_file:
+    file_hash = hash_file(uploaded_file.name)
+    if file_hash:
+      st.write("MD5 Hash of File:", file_hash)
+  else:
+    st.warning("Please enter text or upload a file to hash.")
