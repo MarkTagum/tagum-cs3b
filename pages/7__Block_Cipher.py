@@ -41,7 +41,7 @@ def xor_decrypt(ciphertext, key, block_size):
     decrypted_data += decrypted_block
   return unpad(decrypted_data)
 
-st.title("XOR Encryption/Decryption with Streamlit")
+st.title("XOR Encryption/Decryption")
 
 plaintext = st.text_area("Plaintext").encode()
 key = st.text_area("Key").encode()
