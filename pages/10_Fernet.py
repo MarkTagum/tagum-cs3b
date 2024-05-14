@@ -34,7 +34,7 @@ def main():
   message = st.text_input("Enter a message:")
 
   # Toggle button for mode selection
-  mode = st.toggle("Mode:", options=["Encrypt", "Decrypt"])
+  mode = st.checkbox("Mode:", options=["Encrypt", "Decrypt"])
 
   # Encryption/Decryption based on selected mode
   if message:
