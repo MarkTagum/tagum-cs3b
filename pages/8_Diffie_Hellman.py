@@ -1,4 +1,4 @@
-Python
+
 import random
 import streamlit as st
 
