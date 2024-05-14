@@ -32,15 +32,15 @@ def main():
   # Text input for message
   message = st.text_input("Enter a message:")
 
-  # Radio button for selection (more user-friendly)
-  action = st.radio("Action:", ("Encrypt", "Decrypt"))
+  # Toggle button for mode selection
+  mode = st.toggle("Mode:", options=["Encrypt", "Decrypt"])
 
-  # Encryption/Decryption based on selection
+  # Encryption/Decryption based on selected mode
   if message:
-    if action == "Encrypt":
+    if mode:  # "Encrypt" mode selected
       encrypted_message = encrypt_message(message, key)
       st.write("Encrypted message:", encrypted_message)
-    elif action == "Decrypt":
+    else:  # "Decrypt" mode selected
       try:
         decrypted_message = decrypt_message(message, key)
         st.write("Decrypted message:", decrypted_message)
