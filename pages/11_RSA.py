@@ -1,54 +1,47 @@
 import streamlit as st
 
-# Placeholder functions for key generation and encryption/decryption
+# Simulate key generation (replace with actual generation using a library)
 def generate_keypair():
-  # Implement logic to generate RSA keypair using a library like Cryptography
-  # This should return public and private keys in PEM format
-  pass
+  private_key = "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----\n"
+  public_key = "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----\n"
+  return private_key, public_key
 
+# Dummy encryption/decryption functions (replace with library functions)
 def encrypt(message, public_key):
-  # Implement logic to encrypt message using the public key
-  # This should return the encrypted message
-  pass
+  return f"Encrypted message: {message}"
 
-def decrypt(ciphertext, private_key):
-  # Implement logic to decrypt ciphertext using the private key
-  # This should return the decrypted message
-  pass
+def decrypt(message, private_key):
+  return f"Decrypted message: {message}"
 
-# State variables
-mode = "encrypt"  # Default mode
-uploaded_key = None
+# Streamlit App
+st.title("RSA Encryption/Decryption Demo")
 
-st.title("RSA Encryption/Decryption")
+mode_option = st.selectbox("Select Mode", ("Encrypt", "Decrypt"))
+key_option = st.selectbox("Key Option", ("Generated Key", "Upload Key"))
 
-# Key generation and download button
-if st.button("Generate Keypair"):
-  public_key, private_key = generate_keypair()
-  # Download logic for PEM formatted keys (implement download functionality)
-  st.write("Keys generated. Download links will be provided soon.")
-
-# Upload key button
-uploaded_file = st.file_uploader("Upload Public/Private Key (PEM)", type=["pem"])
-if uploaded_file is not None:
-  uploaded_key = uploaded_file.read().decode("utf-8")
-
-# Mode selection
-mode = st.selectbox("Select Mode", ["encrypt", "decrypt"])
-
-# Input field for message
-message = st.text_area("Enter message to encrypt/decrypt", key="message")
-
-# Encryption/Decryption based on mode
-if mode == "encrypt":
-  if uploaded_key is not None and message:
-    ciphertext = encrypt(message, uploaded_key)
-    st.write("Encrypted message:", ciphertext)
+if key_option == "Generated Key":
+  private_key, public_key = generate_keypair()
+  st.write("Public Key:")
+  st.text_area("Public Key", public_key, disabled=True)
 else:
-  if uploaded_key is not None and message:
-    decrypted_message = decrypt(message, uploaded_key)
-    st.write("Decrypted message:", decrypted_message)
-  else:
-    st.warning("Please upload a private key and provide ciphertext for decryption")
+  # Simulate key upload (replace with actual upload functionality)
+  uploaded_file = st.file_uploader("Upload Key Pair (PEM format)", type=["pem"])
+  private_key = public_key = None
+  if uploaded_file is not None:
+    # Parse uploaded PEM file (not implemented here for security reasons)
+    pass
 
-st.write("**Note:** This is a simplified example. Real-world implementations should use secure libraries and best practices for cryptography.")
+if mode_option == "Encrypt":
+  message = st.text_input("Enter message to encrypt:")
+  if message and public_key:
+    encrypted_message = encrypt(message, public_key)
+    st.write("Encrypted Message:")
+    st.text_area("Encrypted Message", encrypted_message, disabled=True)
+else:
+  message = st.text_input("Enter message to decrypt:")
+  if message and private_key:
+    decrypted_message = decrypt(message, private_key)
+    st.write("Decrypted Message:")
+    st.text_area("Decrypted Message", decrypted_message, disabled=True)
+
+st.write("* This is a demonstration. Do not use for real applications.")
