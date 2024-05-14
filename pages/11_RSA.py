@@ -110,4 +110,3 @@ else:
 
   if private_key_file is not None and public_key_area:
     private_pem = private_key_file.read()
-    
