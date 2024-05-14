@@ -14,8 +14,13 @@ def generate_rsa_key_pair(public_exponent=65537):
     public_key = private_key.public_key()
     return private_key, public_key
 
-def sign_message(message, private_key):
+def sign_message(message, private_key_pem):
     """Signs a message using RSA with PKCS#1 v1.5 padding."""
+    private_key = rsa.load_private_key(
+        private_key_pem,
+        password=None,  # No password for demonstration (not recommended in production)
+        backend=default_backend()
+    )
     private_key = private_key.to_private_key(Encoding.PEM, PrivateFormat.PKCS8, encryption_algorithm=padding.NoEncryption())
     signer = private_key.sign(
         message,
@@ -24,9 +29,12 @@ def sign_message(message, private_key):
     )
     return signer.decode()  # Decode signature to a string for Streamlit display
 
-def verify_signature(message, signature, public_key):
+def verify_signature(message, signature, public_key_pem):
     """Verifies a signature using RSA with PKCS#1 v1.5 padding."""
-    public_key = public_key.to_public_key(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
+    public_key = rsa.load_public_key(
+        public_key_pem,
+        backend=default_backend()
+    )
     try:
         public_key.verify(
             signature.encode(),  # Encode signature for verification
@@ -44,24 +52,35 @@ st.title("RSA Signing with Streamlit")
 # Key generation (optional, can be pre-generated and stored securely)
 if st.button("Generate RSA Key Pair"):
     private_key, public_key = generate_rsa_key_pair()
+    private_key_pem = private_key.private_bytes(
+        encoding=Encoding.PEM,
+        format=PrivateFormat.PKCS8,
+        encryption_algorithm=padding.NoEncryption()
+    )
+    public_key_pem = public_key.public_bytes(
+        encoding=Encoding.PEM,
+        format=PublicFormat.SubjectPublicKeyInfo
+    )
     st.write("Private key (PEM format):")
-    st.text_area("Private Key", private_key.decode(), disabled=True)
+    st.text_area("Private Key", private_key_pem.decode(), disabled=True)
     st.write("Public key (PEM format):")
-    st.text_area("Public Key", public_key.decode(), disabled=True)
+    st.text_area("Public Key", public_key_pem.decode(), disabled=True)
 
 # Signing and verification
-uploaded_private_key = st.file_uploader("Upload Private Key (PEM)", type="pem")
-uploaded_public_key = st.file_uploader("Upload Public Key (PEM)", type="pem")
 message = st.text_input("Enter message to sign:")
+signature_area = st.text_area("Signature")
 
-if uploaded_private_key is not None and message:
-    private_key_pem = uploaded_private_key.read()
-    signature = sign_message(message.encode(), private_key_pem)
-    st.write("Signature:")
-    st.text_area("Signature", signature)
+if private_key_pem := st.session_state.get("private_key_pem") and message:
+    signature = sign_message(message.encode(), private_key_pem.encode())
+    signature_area.value = signature
 
-if uploaded_public_key is not None and message and signature:
-    public_key_pem = uploaded_public_key.read()
-    verification_result = verify_signature(message.encode(), signature.encode(), public_key_pem)
+if public_key_pem := st.session_state.get("public_key_pem") and message and signature_area.value:
+    verification_result = verify_signature(message.encode(), signature_area.value.encode(), public_key_pem.encode())
     st.write("Signature Verification:")
     st.success(verification_result)
+
+# Store keys in session state for persistence across re-runs
+if st.button("Save Keys"):
+    st.session_state["private_key_pem"] = private_key_pem.decode()
+    st.session_state["public_key_pem"] = public_key_pem.decode()
+    st.success("Keys saved in session state")
