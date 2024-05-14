@@ -1,4 +1,5 @@
 import streamlit as st
+import cryptography
 from cryptography.fernet import Fernet
 
 def generate_key():
