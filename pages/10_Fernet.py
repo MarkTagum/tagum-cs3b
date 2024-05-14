@@ -33,15 +33,15 @@ def main():
   # Text input for message
   message = st.text_input("Enter a message:")
 
-  # Toggle button for mode selection
-  mode = st.checkbox("Mode:", options=["Encrypt", "Decrypt"])
+  # Toggle button for mode selection (without options)
+  mode = st.checkbox("Mode:", label="Encrypt")  # Use label for text
 
   # Encryption/Decryption based on selected mode
   if message:
-    if mode:  # "Encrypt" mode selected
+    if mode:  # Checkbox is checked (considered "Encrypt" mode)
       encrypted_message = encrypt_message(message, key)
       st.write("Encrypted message:", encrypted_message)
-    else:  # "Decrypt" mode selected
+    else:  # Checkbox is unchecked (considered "Decrypt" mode)
       try:
         decrypted_message = decrypt_message(message, key)
         st.write("Decrypted message:", decrypted_message)
