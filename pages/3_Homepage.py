@@ -7,7 +7,9 @@ import hashlib
 import base64
 import random
 import os
+import color
 
+bg_color = color.Color("#f0f2f5")  # Light gray background
 
 def homepage():
     """
