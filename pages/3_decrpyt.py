@@ -87,7 +87,7 @@ def main():
         processed_text = ""
         try:
             if selected_crypto == "Caesar Cipher":
-                processed_text, _, _ = caesar_cipher(text, shift_keys, if_decrypt)
+                processed_text, _, _ = caesar_cipher(text, shift_key, if_decrypt)
             elif selected_crypto == "Fernet Symmetric Encryption":
                 processed_text, _, _ = fernet_encrypt_decrypt(text, key, if_decrypt)
             elif selected_crypto == "RSA Asymmetric Encryption":
