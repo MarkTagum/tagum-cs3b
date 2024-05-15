@@ -60,10 +60,6 @@ def main():
     if selected_crypto in descriptions:
         st.sidebar.subheader(selected_crypto)
         st.sidebar.write(descriptions[selected_crypto])
-
-    if selected_crypto == "Diffie Hellman":
-        _, message = diffie_hellman(processed_text)
-        st.write(message)
     
     if selected_crypto in ["Caesar Cipher", "Fernet Symmetric Encryption", "RSA Asymmetric Encryption"]:
         text = st.text_area("Enter Text")
@@ -86,6 +82,43 @@ def main():
         file_uploaded = st.file_uploader("Upload a file")
         key = st.text_input("Enter Encryption Key")
         if_decrypt = st.checkbox("Decrypt")
+
+    if selected_crypto == "Diffie Hellman":
+          # Get prime number (p) and primitive root (g) from user input with validation
+        try:
+            p = int(st.text_input("Enter a large prime number (p):"))
+            g = int(st.text_input("Enter a primitive root modulo p (g):"))
+        except ValueError:
+            st.error("Please enter valid integers for p and g.")
+            return
+
+        # Validate prime number using a more reliable Miller-Rabin primality test
+        if not is_prime(p):
+            st.error("p must be a large prime number. Please try again.")
+            return
+
+        # Generate key pairs for Alice and Bob
+        alice_private, alice_public = generate_key_pair(p, g)
+        bob_private, bob_public = generate_key_pair(p, g)
+
+        # Display key pairs for Alice and Bob
+        st.write("Alice's Private Key:", alice_private)
+        st.write("Alice's Public Key:", alice_public)
+        st.write("Bob's Private Key:", bob_private)
+        st.write("Bob's Public Key:", bob_public)
+
+        # Calculate shared secrets
+        alice_shared_secret = pow(bob_public, alice_private, p)
+        bob_shared_secret = pow(alice_public, bob_private, p)
+
+        # Display shared secrets
+        st.write("Alice's Shared Secret:", alice_shared_secret)
+        st.write("Bob's Shared Secret (should match Alice's):", bob_shared_secret)
+
+        # Inform users about using the shared secret for secure communication
+        st.info("**Note:** The shared secret can be used as a key for secure communication after it is securely exchanged between Alice and Bob.")
+        st.warning("**Important:** It's crucial to securely exchange the public keys (Alice's public key with Bob and vice versa) through a trusted channel to prevent a Man-in-the-Middle attack.")
+
 
     if st.button("Submit"):
         processed_text = ""
@@ -267,45 +300,59 @@ def fernet_file_decrypt(file_uploaded, key, original_filename):
         return None, None
     return decrypted_data, original_filename  # Return original filename for download
 
-def diffie_hellman(processed_text):
-  """
-  Performs Diffie-Hellman key exchange to establish a shared secret.
+def generate_key_pair(p, g):
+  """Generates a public and private key pair for a user in Diffie-Hellman.
 
   Args:
-      processed_text: Placeholder string, not used in this function.
+      p: A large prime number (int).
+      g: A primitive root modulo p (int).
 
   Returns:
-      A tuple containing the shared secret key (str) and an informative message (str).
-  """
-  # Generate large prime number (p) and primitive root (g)
-  p = generate_prime(1024)  # Adjust bit size for desired security level
-  g = 2
-
-  # User A generates their key pair
-  private_key_a, public_key_a = generate_key_pair(p, g)
-
-  # Prompt user A to enter the public key of user B
-  public_key_b_str = st.text_input("Enter User B's Public Key")
-  if not public_key_b_str:
-      return None, "User B's public key is required."
-
-  try:
-      public_key_b = int(public_key_b_str)
-  except ValueError:
-      return None, "Invalid public key format (must be an integer)."
-
-  # User A calculates the shared secret
-  shared_secret_a = pow(public_key_b, private_key_a, p)
-
-  # Informative message for user A
-  message = f"""
-  Diffie-Hellman Key Exchange: User A
-  - Private key: {private_key_a}
-  - Public key: {public_key_a}
-  - Shared secret (User A): {shared_secret_a}
+      A tuple containing the private key (int) and public key (int).
   """
 
-  return str(shared_secret_a), message
+  if not is_prime(p):
+      raise ValueError("p must be a large prime number.")
+
+  private_key = random.randint(1, p - 1)
+  public_key = pow(g, private_key, p)  # Calculate public key using modular exponentiation
+  return private_key, public_key
+
+def is_prime(num):
+  """Performs a primality test on a number using the Miller-Rabin test.
+
+  Args:
+      num: The number to test for primality (int).
+
+  Returns:
+      True if the number is prime, False otherwise.
+  """
+
+  if num <= 1:
+      return False
+  elif num <= 3:
+      return True
+  elif num % 2 == 0 or num % 3 == 0:
+      return False
+
+  d = num - 1
+  while d % 2 == 0:
+      d //= 2
+
+  for _ in range(5):  # Increase iterations for stronger primality testing
+      a = random.randrange(2, num - 1)
+      x = pow(a, d, num)
+      if x == 1 or x == num - 1:
+          continue
+      while d != num - 1:
+          x = pow(x, 2, num)
+          d *= 2
+          if x == num - 1:
+              break
+      else:
+          return False
+  return True
+
 if __name__ == "__main__":
     main()
 
