@@ -1,5 +1,4 @@
 import streamlit as st
-import cryptography
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
