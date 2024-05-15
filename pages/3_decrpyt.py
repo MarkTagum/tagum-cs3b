@@ -48,7 +48,7 @@ def main():
         "SHA-1 Hashing",
         "SHA-256 Hashing",
         "SHA-512 Hashing",
-        "MD5 Hashing"
+        "MD5 Hashing",
         "Diffie Hellman"
     ]
     selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
