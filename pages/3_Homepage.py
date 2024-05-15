@@ -9,11 +9,7 @@ import base64
 import random
 import os
 
-bg_color = color.Color("#f0f2f5")  # Light gray background
- # Set background color
-st.beta_set_page_config(page_background_color=bg_color)
 header_color = color.Color("#3498db")  # Blue header
-
 def homepage():
     """
     Displays the welcome message and application description on the homepage.
@@ -26,7 +22,9 @@ def homepage():
 
 
 def main():
-
+    bg_color = color.Color("#f0f2f5")  # Light gray background
+    # Set background color
+    st.beta_set_page_config(page_background_color=bg_color)
 
     """
     The main function that runs the entire application.
