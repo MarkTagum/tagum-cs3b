@@ -64,13 +64,22 @@ def main():
     # ... (code for handling user interactions and processing)
 
     if st.button("Submit"):
-        # Process data based on selected technique and user input
+        processed_text = ""
+        try:
+            if selected_crypto == "Caesar Cipher":
+                text = st.text_area("Enter Text")
+                shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_value=25, step=1, value=3)
+                if_decrypt = st.checkbox("Decrypt")
+                processed_text, _, _ = caesar_cipher(text, shift_key, if_decrypt)
 
-        # ... (code for processing data and displaying results)
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+        else:
+            st.write("Processed Text:", processed_text)
 
 if __name__ == "__main__":
     main()
-    
+
 def caesar_cipher(text, shift_key, if_decrypt):
     """Encrypts or decrypts text using the Caesar Cipher."""
     result = ""
