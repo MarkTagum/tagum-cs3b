@@ -8,7 +8,7 @@ import base64
 import random
 import os
 
-def Homepage():
+def homepage():
     """
     Displays the welcome message and application description on the homepage.
     """
