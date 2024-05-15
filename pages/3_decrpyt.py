@@ -62,7 +62,7 @@ def main():
         st.sidebar.write(descriptions[selected_crypto])
 
     if selected_crypto == "Diffie Hellman":
-        processed_text, message = diffie_hellman(processed_text)
+        _, message = diffie_hellman(processed_text)
         st.write(message)
     
     if selected_crypto in ["Caesar Cipher", "Fernet Symmetric Encryption", "RSA Asymmetric Encryption"]:
