@@ -9,8 +9,9 @@ import base64
 import random
 import os
 
-header_color = color.Color("#3498db")  # Blue header
+
 def homepage():
+    header_color = color.Color("#3498db")  # Blue header
     """
     Displays the welcome message and application description on the homepage.
     """
