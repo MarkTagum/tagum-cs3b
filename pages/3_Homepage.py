@@ -1,3 +1,4 @@
+from turtle import color
 import streamlit as st
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import serialization, hashes
@@ -8,11 +9,16 @@ import base64
 import random
 import os
 
+bg_color = color.Color("#f0f2f5")  # Light gray background
+ # Set background color
+st.beta_set_page_config(page_background_color=bg_color)
+header_color = color.Color("#3498db")  # Blue header
+
 def homepage():
     """
     Displays the welcome message and application description on the homepage.
     """
-    st.markdown("<h2>Welcome to Cryptography Toolkit</h2>", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="color: {header_color}; text-align: center;">Applied Cryptography Toolkit</h1>""", unsafe_allow_html=True)
     st.write("This toolkit provides various cryptographic techniques for encryption, decryption, and hashing.")
     st.write("")
 
@@ -20,11 +26,13 @@ def homepage():
 
 
 def main():
+
+
     """
     The main function that runs the entire application.
     """
-    st.title("Applied Cryptography Application")
-
+    st.beta_set_page_config(page_title="Applied Cryptography Application", page_icon=":lock:", layout="wide", initial_sidebar_state="expanded")
+    
     # Description for each cryptographic algorithm
     descriptions = {
         "Caesar Cipher": "The Caesar Cipher is one of the simplest and most widely known encryption techniques. It is a substitution cipher where each letter in the plaintext is shifted a certain number of places down or up the alphabet.",

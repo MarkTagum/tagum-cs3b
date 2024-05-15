@@ -24,10 +24,9 @@ def run():
         page_icon="👋",
     )
     st.markdown("<h2>Welcome to Cryptography Toolkit</h2>", unsafe_allow_html=True)
-    st.write("by: MARK B. TAGUM, CECIL DAGON, MARRI GRACE MORATA")
+    st.write("BY: MARK B. TAGUM, CECIL DAGON, MARRI GRACE MORATA")
     st.write("")
     
-    st.write("Please select a technique from the sidebar to get started.")
 
 
 if __name__ == "__main__":
