@@ -17,12 +17,6 @@ def homepage():
     st.write("This toolkit provides various cryptographic techniques for encryption, decryption, and hashing.")
     st.write("")
 
-    # Center-align the images
-    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-
-    # Close the center-aligned container
-    st.markdown("</div>", unsafe_allow_html=True)
-
     st.write("Please select a technique from the sidebar to get started.")
 
 
