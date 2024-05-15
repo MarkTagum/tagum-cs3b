@@ -49,6 +49,7 @@ def main():
         "SHA-256 Hashing",
         "SHA-512 Hashing",
         "MD5 Hashing"
+        "Diffie Hellman"
     ]
     selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
 
@@ -59,11 +60,14 @@ def main():
     if selected_crypto in descriptions:
         st.sidebar.subheader(selected_crypto)
         st.sidebar.write(descriptions[selected_crypto])
+
+    if selected_crypto == "Diffie Hellman":
+        processed_text, message = diffie_hellman(processed_text)
+        st.write(message)
     
     if selected_crypto in ["Caesar Cipher", "Fernet Symmetric Encryption", "RSA Asymmetric Encryption"]:
         text = st.text_area("Enter Text")
         if selected_crypto == "Caesar Cipher":
-            st.title("Caesar Cipher with Multiple Shift Keys")
             shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_value=25, step=1, value=3)
         if selected_crypto == "Fernet Symmetric Encryption":
             key = st.text_input("Enter Encryption Key")
@@ -112,6 +116,7 @@ def main():
                     processed_text = hash_text(text, "md5")
                 else:
                     processed_text = hash_file(file_uploaded, "md5")
+
             elif selected_crypto == "Symmetric File Encryption":
                 if file_uploaded is not None:
                     original_filename = file_uploaded.name
@@ -262,6 +267,45 @@ def fernet_file_decrypt(file_uploaded, key, original_filename):
         return None, None
     return decrypted_data, original_filename  # Return original filename for download
 
+def diffie_hellman(processed_text):
+  """
+  Performs Diffie-Hellman key exchange to establish a shared secret.
+
+  Args:
+      processed_text: Placeholder string, not used in this function.
+
+  Returns:
+      A tuple containing the shared secret key (str) and an informative message (str).
+  """
+  # Generate large prime number (p) and primitive root (g)
+  p = generate_prime(1024)  # Adjust bit size for desired security level
+  g = 2
+
+  # User A generates their key pair
+  private_key_a, public_key_a = generate_key_pair(p, g)
+
+  # Prompt user A to enter the public key of user B
+  public_key_b_str = st.text_input("Enter User B's Public Key")
+  if not public_key_b_str:
+      return None, "User B's public key is required."
+
+  try:
+      public_key_b = int(public_key_b_str)
+  except ValueError:
+      return None, "Invalid public key format (must be an integer)."
+
+  # User A calculates the shared secret
+  shared_secret_a = pow(public_key_b, private_key_a, p)
+
+  # Informative message for user A
+  message = f"""
+  Diffie-Hellman Key Exchange: User A
+  - Private key: {private_key_a}
+  - Public key: {public_key_a}
+  - Shared secret (User A): {shared_secret_a}
+  """
+
+  return str(shared_secret_a), message
 if __name__ == "__main__":
     main()
 
