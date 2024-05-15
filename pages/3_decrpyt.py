@@ -80,18 +80,60 @@ def main():
 if __name__ == "__main__":
     main()
 
-def caesar_cipher(text, shift_key, if_decrypt):
-    """Encrypts or decrypts text using the Caesar Cipher."""
+def caesar_cipher(text, shift_keys, if_decrypt):
+    """
+    Encrypts or decrypts text using the Caesar Cipher with multiple shift keys.
+
+    Args:
+        text: The text to process (str).
+        shift_keys: A list of integers representing shift values for each character (list).
+        if_decrypt: Flag indicating encryption (False) or decryption (True) (bool).
+
+    Returns:
+        A tuple containing:
+            - The encrypted or decrypted text (str).
+            - (Optional) An error message if invalid shift keys are provided (str).
+            - (Optional) A list of the original shift keys used (list of int).
+    """
+
     result = ""
-    for char in text:
-        if 32 <= ord(char) <= 125:
-            shift = shift_key if not if_decrypt else -shift_key
-            new_ascii = ord(char) + shift
-            while new_ascii > 125:
-                new_ascii -= 94
-            while new_ascii < 32:
-                new_ascii += 94
-            result += chr(new_ascii)
-        else:
-            result += char
-    return result, None, None  # Caesar Cipher doesn't generate keys
+    error_message = None
+    original_shift_keys = shift_keys.copy()  # Track original keys for potential error reporting
+
+    if not shift_keys or not all(isinstance(key, int) for key in shift_keys):
+        error_message = "Invalid input: Please enter comma-separated integers for shift keys."
+    else:
+        for i, char in enumerate(text):
+            if 32 <= ord(char) <= 126:
+                shift = shift_keys[i % len(shift_keys)] * (-1 if if_decrypt else 1)
+                shifted_char = chr((ord(char) - 32 + shift) % 94 + 32)
+                result += shifted_char
+            else:
+                result += char
+
+    return result, error_message, original_shift_keys
+
+# Streamlit App Structure (assuming integration into a larger app)
+st.title("Caesar Cipher with Multiple Shift Keys")
+
+text = st.text_area("Enter Text to Encrypt/Decrypt:")
+shift_keys_str = st.text_input("Enter Shift Keys (comma-separated):")
+
+try:
+    shift_keys = list(map(int, shift_keys_str.split(",")))
+except ValueError:
+    shift_keys = []
+    st.error("Invalid input: Please enter comma-separated integers for shift keys.")
+
+if st.button("Process Text"):
+    processed_text, error_message, original_shift_keys = caesar_cipher(text, shift_keys, False)
+
+    if error_message:
+        st.error(error_message)
+    else:
+        decrypted_text = caesar_cipher(processed_text, original_shift_keys, True)[0]  # Use original keys for decryption
+
+        st.write("Original Text:", text)
+        st.write("Shift Keys:", ", ".join(map(str, original_shift_keys)))
+        st.write("Encrypted Text:", processed_text)
+        st.write("Decrypted Text:", decrypted_text)
