@@ -131,13 +131,23 @@ def main():
         else:
             st.write("Processed Text:", processed_text)
 
-def caesar_cipher(text, shift_key, if_decrypt):
-    """Encrypts or decrypts text using the Caesar Cipher."""
+def caesar_cipher(text, shift_keys, if_decrypt):
+    """Encrypts or decrypts text using the Caesar Cipher with multiple shift keys.
+
+    Args:
+        text (str): The text to process.
+        shift_keys (list[int]): A list of integers representing shift values for each character.
+        if_decrypt (bool): Flag indicating encryption (False) or decryption (True).
+
+    Returns:
+        str: The encrypted or decrypted text.
+    """
+
     result = ""
-    for char in text:
-        if 32 <= ord(char) <= 125:
-            shift = shift_key if not if_decrypt else -shift_key
-            new_ascii = ord(char) + shift
+    for i, char in enumerate(text):
+        if char.isascii() and 32 <= ord(char) <= 126:
+            shift_key = shift_keys[i % len(shift_keys)] * (-1 if if_decrypt else 1)
+            new_ascii = ord(char) + shift_key
             while new_ascii > 125:
                 new_ascii -= 94
             while new_ascii < 32:
