@@ -25,39 +25,58 @@ def main():
     """The main function of the Streamlit app."""
     st.title("Applied Cryptography Application")
 
-    # Cryptographic algorithm descriptions
-    descriptions = {
-        "Caesar Cipher": "...",
-        "Fernet Symmetric Encryption": "...",
-        "RSA Asymmetric Encryption": "...",
-        "SHA-1 Hashing": "...",
-        "SHA-256 Hashing": "...",
-        "SHA-512 Hashing": "...",
-        "MD5 Hashing": "...",
-        "Symmetric File Encryption": "...",
-    }
+    # Homepage button outside the sidebar and crypto options
+    if st.button("Homepage"):
+        homepage()
+    else:
+        # Cryptographic algorithm descriptions (excluding "Homepage")
+        descriptions = {
+            "Caesar Cipher": "...",
+            "Fernet Symmetric Encryption": "...",
+            "RSA Asymmetric Encryption": "...",
+            "SHA-1 Hashing": "...",
+            "SHA-256 Hashing": "...",
+            "SHA-512 Hashing": "...",
+            "MD5 Hashing": "...",
+            "Symmetric File Encryption": "...",
+        }
 
-    # User interface elements and interactions
-    crypto_options = [
-        "Homepage",
-        "Caesar Cipher",
-        "Fernet Symmetric Encryption",
-        "Symmetric File Encryption",
-        "RSA Asymmetric Encryption",
-        "SHA-1 Hashing",
-        "SHA-256 Hashing",
-        "SHA-512 Hashing",
-        "MD5 Hashing",
-    ]
-    selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
+        # User interface elements and interactions within the sidebar
+        crypto_options = list(descriptions.keys())  # Exclude "Homepage"
+        selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
 
+        if selected_crypto in descriptions:
+            st.sidebar.subheader(selected_crypto)
+            st.sidebar.write(descriptions[selected_crypto])
 
-    if selected_crypto in descriptions:
-        st.sidebar.subheader(selected_crypto)
-        st.sidebar.write(descriptions[selected_crypto])
+            # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
 
-    # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
+            # Move the submit button to the sidebar
+            if st.sidebar.button("Submit"):
+                processed_text = ""
+                try:
+                    if selected_crypto == "Caesar Cipher":
+                        text = st.text_area("Enter Text")
+                        shift_keys_str = st.text_input("Enter Shift Keys (comma-separated):")
 
+                        try:
+                            shift_keys = list(map(int, shift_keys_str.split(",")))
+                        except ValueError:
+                            shift_keys = []
+                            st.error("Invalid input: Please enter comma-separated integers for shift keys.")
+
+                        if_decrypt = st.checkbox("Decrypt")
+                        processed_text, error_message, original_shift_keys = caesar_cipher(text, shift_keys, if_decrypt)
+
+                    # Add logic for other cryptographic techniques here
+
+                    if error_message:
+                        st.error(error_message)
+                    else:
+                        st.write("Processed Text:", processed_text)
+
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
     main()
