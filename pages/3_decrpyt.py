@@ -51,9 +51,6 @@ def main():
     ]
     selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
 
-    if selected_crypto == "Homepage":
-        homepage()
-        return
 
     if selected_crypto in descriptions:
         st.sidebar.subheader(selected_crypto)
