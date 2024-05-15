@@ -21,65 +21,6 @@ def homepage():
     # st.image('path/to/image1.jpg', width=300, caption='...')
     # st.image('path/to/image2.jpg', width=300, caption='...')
 
-def main():
-    """The main function of the Streamlit app."""
-    st.title("Applied Cryptography Application")
-
-    # Cryptographic algorithm descriptions
-    descriptions = {
-        "Caesar Cipher": "...",
-        "Fernet Symmetric Encryption": "...",
-        "RSA Asymmetric Encryption": "...",
-        "SHA-1 Hashing": "...",
-        "SHA-256 Hashing": "...",
-        "SHA-512 Hashing": "...",
-        "MD5 Hashing": "...",
-        "Symmetric File Encryption": "...",
-    }
-
-    # User interface elements and interactions
-    crypto_options = [
-        "Homepage",
-        "Caesar Cipher",
-        "Fernet Symmetric Encryption",
-        "Symmetric File Encryption",
-        "RSA Asymmetric Encryption",
-        "SHA-1 Hashing",
-        "SHA-256 Hashing",
-        "SHA-512 Hashing",
-        "MD5 Hashing",
-    ]
-    selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
-
-    if selected_crypto == "Homepage":
-        homepage()
-        return
-
-    if selected_crypto in descriptions:
-        st.sidebar.subheader(selected_crypto)
-        st.sidebar.write(descriptions[selected_crypto])
-
-    # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
-
-    # ... (code for handling user interactions and processing)
-
-    if st.button("Submit"):
-        processed_text = ""
-        try:
-            if selected_crypto == "Caesar Cipher":
-                text = st.text_area("Enter Text")
-                shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_value=25, step=1, value=3)
-                if_decrypt = st.checkbox("Decrypt")
-                processed_text, _, _ = caesar_cipher(text, shift_key, if_decrypt)
-
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
-        else:
-            st.write("Processed Text:", processed_text)
-
-if __name__ == "__main__":
-    main()
-
 def caesar_cipher(text, shift_keys, if_decrypt):
     """
     Encrypts or decrypts text using the Caesar Cipher with multiple shift keys.
@@ -137,3 +78,60 @@ if st.button("Process Text"):
         st.write("Shift Keys:", ", ".join(map(str, original_shift_keys)))
         st.write("Encrypted Text:", processed_text)
         st.write("Decrypted Text:", decrypted_text)
+
+def main():
+    """The main function of the Streamlit app."""
+    st.title("Applied Cryptography Application")
+
+    # Cryptographic algorithm descriptions
+    descriptions = {
+        "Caesar Cipher": "...",
+        "Fernet Symmetric Encryption": "...",
+        "RSA Asymmetric Encryption": "...",
+        "SHA-1 Hashing": "...",
+        "SHA-256 Hashing": "...",
+        "SHA-512 Hashing": "...",
+        "MD5 Hashing": "...",
+        "Symmetric File Encryption": "...",
+    }
+
+    # User interface elements and interactions
+    crypto_options = [
+        "Homepage",
+        "Caesar Cipher",
+        "Fernet Symmetric Encryption",
+        "Symmetric File Encryption",
+        "RSA Asymmetric Encryption",
+        "SHA-1 Hashing",
+        "SHA-256 Hashing",
+        "SHA-512 Hashing",
+        "MD5 Hashing",
+    ]
+    selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
+
+    if selected_crypto == "Homepage":
+        homepage()
+        return
+
+    if selected_crypto in descriptions:
+        st.sidebar.subheader(selected_crypto)
+        st.sidebar.write(descriptions[selected_crypto])
+
+    # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
+
+    # ... (code for handling user interactions and processing)
+
+    if st.button("Submit"):
+        processed_text = ""
+        try:
+            if selected_crypto == "Caesar Cipher":
+                processed_text, _, _ = caesar_cipher()
+
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+        else:
+            st.write("Processed Text:", processed_text)
+
+if __name__ == "__main__":
+    main()
+
