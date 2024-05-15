@@ -61,25 +61,6 @@ def main():
 
     # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
 
-    # Move the submit button to the sidebar
-    if st.sidebar.button("Submit"):
-        processed_text = ""
-        try:
-            if selected_crypto == "Caesar Cipher":
-                text = st.text_area("Enter Text")
-                shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_value=25, step=1, value=3)
-                if_decrypt = st.checkbox("Decrypt")
-                processed_text, error_message, original_shift_keys = caesar_cipher(text, shift_key, if_decrypt)
-
-            # Add logic for other cryptographic techniques here
-
-            if error_message:
-                st.error(error_message)
-            else:
-                st.write("Processed Text:", processed_text)
-
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
     main()
