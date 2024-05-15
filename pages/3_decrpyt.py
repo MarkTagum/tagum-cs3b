@@ -115,11 +115,6 @@ def main():
         st.write("Alice's Shared Secret:", alice_shared_secret)
         st.write("Bob's Shared Secret (should match Alice's):", bob_shared_secret)
 
-        # Inform users about using the shared secret for secure communication
-        st.info("**Note:** The shared secret can be used as a key for secure communication after it is securely exchanged between Alice and Bob.")
-        st.warning("**Important:** It's crucial to securely exchange the public keys (Alice's public key with Bob and vice versa) through a trusted channel to prevent a Man-in-the-Middle attack.")
-
-
     if st.button("Submit"):
         processed_text = ""
         try:
