@@ -1,108 +1,88 @@
 import streamlit as st
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import (
+    serialization,
+    hashes,
+    asymmetric,
+    padding,
+)
+from cryptography.hazmat.backends import default_backend
 import hashlib
-
-
-def hash_text(text):
-  """
-  Hashes the text with character-level and overall hashing.
-
-  Args:
-      text: The text to hash (str).
-
-  Returns:
-      A dictionary containing character-level hashes and the final hash (dict).
-  """
-  seen_chars = set()
-  char_hashes = {}
-  for char in text:
-    if char not in seen_chars:
-      seen_chars.add(char)
-      encoded_char = char.encode()
-      if char.isspace():
-        char_hash = hashlib.sha1(b"<space>").hexdigest().upper()
-      else:
-        char_hash = hashlib.sha1(encoded_char).hexdigest().upper()
-      char_hashes[char] = char_hash
-      st.write(f"{char_hash} {char}")
-  final_hash = hashlib.sha1(text.encode()).hexdigest().upper()
-  return {"char_hashes": char_hashes, "final_hash": final_hash}
-
+import base64
+import os
 
 def homepage():
-  """Displays the homepage with design elements."""
-  st.title("Applied Cryptography Application")
+    """Displays the welcome message and introductory text."""
+    st.markdown("<h2>Welcome to Cryptography Toolkit</h2>", unsafe_allow_html=True)
+    st.write("This toolkit provides various cryptographic techniques for encryption, decryption, and hashing.")
+    st.write("")
 
-  # Hero section with image and call to action
-  st.markdown("""
-  <div style="display: flex; align-items: center; justify-content: center;">
-    <img src="path/to/your/banner.jpg" alt="Cryptography Banner" style="width: 70%; height: auto;">
-  </div>
-  <div style="text-align: center;">
-    <h2>Secure Your Data with Applied Cryptography</h2>
-    <p>Encrypt, decrypt, and hash your data with ease using our user-friendly tools.</p>
-    <button type="button" class="btn btn-primary">Get Started</button>
-  </div>
-  """, unsafe_allow_html=True)
-
-  # Content section with explanations and visuals
-  st.write("---")  # Horizontal separator
-
-  st.subheader("What We Offer:")
-  st.markdown("""
-  <ul>
-    <li>Encryption: Transform your data into a secure format for safe storage and transmission.</li>
-    <li>Decryption: Recover your encrypted data back to its original form.</li>
-    <li>Hashing: Generate a unique fingerprint of your data to verify its integrity.</li>
-  </ul>
-  """, unsafe_allow_html=True)
-
-  # Add icons or GIFs for each technique (replace with your image paths)
-  col1, col2, col3 = st.columns(3)
-  with col1:
-    st.image("path/to/encryption_icon.png", width=100)
-    st.caption("Encryption")
-  with col2:
-    st.image("path/to/decryption_icon.png", width=100)
-    st.caption("Decryption")
-  with col3:
-    st.image("path/to/hashing_icon.png", width=100)
-    st.caption("Hashing")
-
-  # Showcase user interface with screenshot or animation
-  st.subheader("Easy to Use Interface:")
-  st.write("Experience a seamless workflow with our intuitive design.")
-  st.image("path/to/homepage_screenshot.png")  # Replace with your screenshot
-
-  # Optionally, include a short explainer video
-  # st.video("path/to/cryptography_ explainer.mp4")
-
+    # Add image placeholders if desired
+    # st.image('path/to/image1.jpg', width=300, caption='...')
+    # st.image('path/to/image2.jpg', width=300, caption='...')
 
 def main():
-  st.title("Applied Cryptography Application")
+    """The main function of the Streamlit app."""
+    st.title("Applied Cryptography Application")
 
-  # Descriptions for cryptographic algorithms (unchanged)
-  descriptions = {
-      # ... (existing descriptions)
-  }
+    # Cryptographic algorithm descriptions
+    descriptions = {
+        "Caesar Cipher": "...",
+        "Fernet Symmetric Encryption": "...",
+        "RSA Asymmetric Encryption": "...",
+        "SHA-1 Hashing": "...",
+        "SHA-256 Hashing": "...",
+        "SHA-512 Hashing": "...",
+        "MD5 Hashing": "...",
+        "Symmetric File Encryption": "...",
+    }
 
-  # Streamlit UI setup
-  crypto_options = [
-      "Homepage",
-      "Caesar Cipher",
-      "Fernet Symmetric Encryption",
-      "Symmetric File Encryption",
-      "RSA Asymmetric Encryption",
-      "SHA-1 Hashing",
-      "SHA-256 Hashing",
-      "SHA-512 Hashing",
-      "MD5 Hashing",
-  ]
-  selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
+    # User interface elements and interactions
+    crypto_options = [
+        "Homepage",
+        "Caesar Cipher",
+        "Fernet Symmetric Encryption",
+        "Symmetric File Encryption",
+        "RSA Asymmetric Encryption",
+        "SHA-1 Hashing",
+        "SHA-256 Hashing",
+        "SHA-512 Hashing",
+        "MD5 Hashing",
+    ]
+    selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
 
-  if selected_crypto == "Homepage":
-    homepage()
-    return
+    if selected_crypto == "Homepage":
+        homepage()
+        return
 
-  if selected_crypto in descriptions:
-    st.sidebar.subheader(selected_crypto)
-    st.sidebar.write(descriptions[selected_crypto])
+    if selected_crypto in descriptions:
+        st.sidebar.subheader(selected_crypto)
+        st.sidebar.write(descriptions[selected_crypto])
+
+    # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
+
+    # ... (code for handling user interactions and processing)
+
+    if st.button("Submit"):
+        # Process data based on selected technique and user input
+
+        # ... (code for processing data and displaying results)
+
+if __name__ == "__main__":
+    main()
+    
+def caesar_cipher(text, shift_key, if_decrypt):
+    """Encrypts or decrypts text using the Caesar Cipher."""
+    result = ""
+    for char in text:
+        if 32 <= ord(char) <= 125:
+            shift = shift_key if not if_decrypt else -shift_key
+            new_ascii = ord(char) + shift
+            while new_ascii > 125:
+                new_ascii -= 94
+            while new_ascii < 32:
+                new_ascii += 94
+            result += chr(new_ascii)
+        else:
+            result += char
+    return result, None, None  # Caesar Cipher doesn't generate keys
