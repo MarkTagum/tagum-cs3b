@@ -63,7 +63,39 @@ def main():
     if selected_crypto in ["Caesar Cipher", "Fernet Symmetric Encryption", "RSA Asymmetric Encryption"]:
         text = st.text_area("Enter Text")
         if selected_crypto == "Caesar Cipher":
-            shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_value=25, step=1, value=3)
+            st.title("Caesar Cipher with Multiple Shift Keys")
+
+        # Input for text
+        text = st.text_area("Enter Text to Encrypt/Decrypt:")
+
+        # Input for shift keys (separated by spaces)
+        shift_keys_str = st.text_input("Enter Shift Keys (space-separated):")
+
+        # Convert shift keys string to a list of integers with error handling
+        try:
+            shift_keys = list(map(int, shift_keys_str.split()))
+            if not shift_keys:
+                raise ValueError("Please enter at least one shift key.")
+        except ValueError:
+            shift_keys = []
+            st.error("Invalid input: Please enter space-separated integers for shift keys.")
+
+        # Button to trigger encryption/decryption
+        if st.button("Process Text"):
+            if not shift_keys:
+                st.error("Please enter valid shift keys.")
+            else:
+                # Encrypt the text
+                encrypted_text = caesar_cipher(text, shift_keys, False)
+                # Decrypt the encrypted text
+                decrypted_text = caesar_cipher(encrypted_text, shift_keys, True)
+
+                # Display results
+                st.write("Original Text:", text)
+                st.write("Shift Keys:", ", ".join(map(str, shift_keys)))
+                st.write("Encrypted Text:", encrypted_text)
+                st.write("Decrypted Text:", decrypted_text)
+
         if selected_crypto == "Fernet Symmetric Encryption":
             key = st.text_input("Enter Encryption Key")
         elif selected_crypto == "RSA Asymmetric Encryption":
@@ -86,7 +118,7 @@ def main():
         processed_text = ""
         try:
             if selected_crypto == "Caesar Cipher":
-                processed_text, _, _ = caesar_cipher(text, shift_key, if_decrypt)
+                processed_text, _, _ = caesar_cipher(text, shift_keys, if_decrypt)
             elif selected_crypto == "Fernet Symmetric Encryption":
                 processed_text, _, _ = fernet_encrypt_decrypt(text, key, if_decrypt)
             elif selected_crypto == "RSA Asymmetric Encryption":
@@ -132,31 +164,20 @@ def main():
             st.write("Processed Text:", processed_text)
 
 def caesar_cipher(text, shift_keys, if_decrypt):
-    """Encrypts or decrypts text using the Caesar Cipher with multiple shift keys.
-
-    Args:
-        text (str): The text to process.
-        shift_keys (list[int]): A list of integers representing shift values for each character.
-        if_decrypt (bool): Flag indicating encryption (False) or decryption (True).
-
-    Returns:
-        str: The encrypted or decrypted text.
-    """
-
+    """Encrypts or decrypts text using the Caesar Cipher."""
     result = ""
     for i, char in enumerate(text):
         if char.isascii() and 32 <= ord(char) <= 126:
-            shift_key = shift_keys[i % len(shift_keys)] * (-1 if if_decrypt else 1)
-            new_ascii = ord(char) + shift_key
-            while new_ascii > 125:
-                new_ascii -= 94
-            while new_ascii < 32:
-                new_ascii += 94
+            shift = shift_keys[i % len(shift_keys)] * (-1 if if_decrypt else 1)
+            new_ascii = ord(char) + shift
+        while new_ascii > 125:
+            new_ascii -= 94
+        while new_ascii < 32:
+            new_ascii += 94
             result += chr(new_ascii)
         else:
             result += char
-    return result, None, None  # Caesar Cipher doesn't generate keys
-
+        return result
 
 def fernet_encrypt_decrypt(text, key, if_decrypt):
     """Encrypts or decrypts text using the Fernet symmetric encryption."""
