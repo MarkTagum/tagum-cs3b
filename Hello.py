@@ -23,8 +23,11 @@ def run():
         page_title="Welcome",
         page_icon="👋",
     )
-    st.write("# Welcome to Streamlit! 👋")
-    st.write("by: MARK B. TAGUM")
+    st.markdown("<h2>Welcome to Cryptography Toolkit</h2>", unsafe_allow_html=True)
+    st.write("by: MARK B. TAGUM, CECIL DAGON, MARRI GRACE MORATA")
+    st.write("")
+    
+    st.write("Please select a technique from the sidebar to get started.")
 
 
 if __name__ == "__main__":
