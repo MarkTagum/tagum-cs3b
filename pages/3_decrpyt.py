@@ -1,115 +1,73 @@
 import streamlit as st
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import (
-    serialization,
-    hashes,
-    asymmetric,
-    padding,
-)
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.backends import default_backend
 import hashlib
 import base64
 import os
 
+
 def homepage():
-    """Displays the welcome message and introductory text."""
+    """Displays the welcome message and application description"""
     st.markdown("<h2>Welcome to Cryptography Toolkit</h2>", unsafe_allow_html=True)
     st.write("This toolkit provides various cryptographic techniques for encryption, decryption, and hashing.")
     st.write("")
 
-    # Add image placeholders if desired
-    # st.image('path/to/image1.jpg', width=300, caption='...')
-    # st.image('path/to/image2.jpg', width=300, caption='...')
+    # Center-align the images
+    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+
+    st.image('435792060_908559531280445_5041796525148081874_n.jpg', width=300, caption='Francis Arroyo')
+    st.image('80ba58d9-8951-4f51-a6aa-6b0dd67acad5.jpg', width=300, caption='Ma Veronica Beltrano')
+    st.image('36962e81-2167-4f1f-8aac-39ffc2d272e1.jpg', width=300, caption='Ma Antoinette Sisno')
+
+    # Close the center-aligned container
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    st.write("Please select a technique from the sidebar to get started.")
+
 
 def main():
-    """The main function of the Streamlit app."""
+    """
+    Sets up the Streamlit user interface and calls functions based on user selections
+    """
     st.title("Applied Cryptography Application")
 
-    # Homepage button on top, outside selection
-    if st.sidebar.button("Homepage"):
+    # Description for each cryptographic algorithm
+    descriptions = {
+        "Caesar Cipher": "The Caesar Cipher is one of the simplest and most widely known encryption techniques. It is a substitution cipher where each letter in the plaintext is shifted a certain number of places down or up the alphabet.",
+        "Fernet Symmetric Encryption": "Fernet is a symmetric encryption algorithm that uses a shared secret key to encrypt and decrypt data. It provides strong encryption and is easy to use.",
+        "RSA Asymmetric Encryption": "RSA (Rivest-Shamir-Adleman) is an asymmetric encryption algorithm that uses a public-private key pair. It is widely used for secure communication and digital signatures.",
+        "SHA-1 Hashing": "SHA-1 is a cryptographic hash function that produces a 160-bit (20-byte) hash value. It is commonly used for data integrity verification.",
+        "SHA-256 Hashing": "SHA-256 is a cryptographic hash function that produces a 256-bit (32-byte) hash value. It is commonly used for data integrity verification.",
+        "SHA-512 Hashing": "SHA-512 is a cryptographic hash function that produces a 512-bit (64-byte) hash value. It provides stronger security than SHA-256.",
+        "MD5 Hashing": "MD5 is a widely used cryptographic hash function that produces a 128-bit (16-byte) hash value. It is commonly used for checksums and data integrity verification.",
+        "Symmetric File Encryption": "Symmetric encryption technique to encrypt and decrypt files using Fernet."
+    }
+
+    # Streamlit UI setup
+    crypto_options = [
+        "Homepage",
+        "Caesar Cipher",
+        "Fernet Symmetric Encryption",
+        "Symmetric File Encryption",
+        "RSA Asymmetric Encryption",
+        "SHA-1 Hashing",
+        "SHA-256 Hashing",
+        "SHA-512 Hashing",
+        "MD5 Hashing"
+    ]
+    selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
+
+    if selected_crypto == "Homepage":
         homepage()
-    else:
-        # Cryptographic algorithm descriptions (excluding "Homepage")
-        descriptions = {
-            "Caesar Cipher": "...",
-            "Fernet Symmetric Encryption": "...",
-            "RSA Asymmetric Encryption": "...",
-            "SHA-1 Hashing": "...",
-            "SHA-256 Hashing": "...",
-            "SHA-512 Hashing": "...",
-            "MD5 Hashing": "...",
-            "Symmetric File Encryption": "...",
-        }
+        return
 
-        # User interface elements and interactions
-        crypto_options = list(descriptions.keys())  # Exclude "Homepage"
-        selected_crypto = st.sidebar.selectbox("Select Cryptographic Technique", crypto_options)
+    if selected_crypto in descriptions:
+        st.sidebar.subheader(selected_crypto)
+        st.sidebar.write(descriptions[selected_crypto])
 
-        if selected_crypto in descriptions:
-            st.sidebar.subheader(selected_crypto)
-            st.sidebar.write(descriptions[selected_crypto])
-
-        # Implement logic for handling user input, encryption/decryption, hashing, and displaying results based on the selected option
-
-# Rest of the code (caesar_cipher function and Streamlit app integration) remains unchanged
-
-if __name__ == "__main__":
-    main()
-    
-def caesar_cipher(text, shift_keys, if_decrypt):
-    """
-    Encrypts or decrypts text using the Caesar Cipher with multiple shift keys.
-
-    Args:
-        text: The text to process (str).
-        shift_keys: A list of integers representing shift values for each character (list).
-        if_decrypt: Flag indicating encryption (False) or decryption (True) (bool).
-
-    Returns:
-        A tuple containing:
-            - The encrypted or decrypted text (str).
-            - (Optional) An error message if invalid shift keys are provided (str).
-            - (Optional) A list of the original shift keys used (list of int).
-    """
-
-    result = ""
-    error_message = None
-    original_shift_keys = shift_keys.copy()  # Track original keys for potential error reporting
-
-    if not shift_keys or not all(isinstance(key, int) for key in shift_keys):
-        error_message = "Invalid input: Please enter comma-separated integers for shift keys."
-    else:
-        for i, char in enumerate(text):
-            if 32 <= ord(char) <= 126:
-                shift = shift_keys[i % len(shift_keys)] * (-1 if if_decrypt else 1)
-                shifted_char = chr((ord(char) - 32 + shift) % 94 + 32)
-                result += shifted_char
-            else:
-                result += char
-
-    return result, error_message, original_shift_keys
-
-# Streamlit App Structure (assuming integration into a larger app)
-st.title("Caesar Cipher with Multiple Shift Keys")
-
-text = st.text_area("Enter Text to Encrypt/Decrypt:")
-shift_keys_str = st.text_input("Enter Shift Keys (comma-separated):")
-
-try:
-    shift_keys = list(map(int, shift_keys_str.split(",")))
-except ValueError:
-    shift_keys = []
-    st.error("Invalid input: Please enter comma-separated integers for shift keys.")
-
-if st.button("Process Text"):
-    processed_text, error_message, original_shift_keys = caesar_cipher(text, shift_keys, False)
-
-    if error_message:
-        st.error(error_message)
-    else:
-        decrypted_text = caesar_cipher(processed_text, original_shift_keys, True)[0]  # Use original keys for decryption
-
-        st.write("Original Text:", text)
-        st.write("Shift Keys:", ", ".join(map(str, original_shift_keys)))
-        st.write("Encrypted Text:", processed_text)
-        st.write("Decrypted Text:", decrypted_text)
+    if selected_crypto in ["Caesar Cipher", "Fernet Symmetric Encryption", "RSA Asymmetric Encryption"]:
+        text = st.text_area("Enter Text")
+        if selected_crypto == "Caesar Cipher":
+            shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_
