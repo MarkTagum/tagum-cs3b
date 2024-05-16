@@ -22,6 +22,7 @@ def xor_decrypt(ciphertext, key):
 
 
 # Example usage:
+st.title("XOR Cipher")
 plaintext = bytes(st.text_area("Plaintext:").encode())
 key = bytes(st.text_area("Key:").encode())
 
