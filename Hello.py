@@ -25,7 +25,7 @@ def run():
     )
     st.markdown("<h2>Welcome to Cryptography Toolkit</h2>", unsafe_allow_html=True)
     st.write("BY: MARK B. TAGUM, CECIL DAGON, MARRI GRACE MORATA")
-    st.write("")
+    st.write("BSCS-3B")
     
 
 
