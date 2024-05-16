@@ -54,7 +54,7 @@ class ElGamal:
         """
         message_int = message_to_integer(message)
         c1 = pow(self.g, k, self.p)
-        c2 = message_int * pow(self.h, k, self.p) % self.p
+        c2 = message_int * pow(self.g, q, self.p) % self.p
         return c1, c2
 
     def decrypt(self, c1, c2):
