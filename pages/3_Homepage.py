@@ -16,9 +16,6 @@ def homepage():
     st.write("This toolkit provides various cryptographic techniques for encryption, decryption, and hashing.")
     st.write("")
 
-    st.write("Please select a technique from the sidebar to get started.")
-
-
 def main():
     """
     The main function that runs the entire application.
