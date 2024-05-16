@@ -191,28 +191,18 @@ def fernet_encrypt_decrypt(text, key, if_decrypt):
     else:
         return fernet.encrypt(text.encode()).decode(), key, None
 
-
 def rsa_encrypt_decrypt(text, key, if_decrypt):
     """Encrypts or decrypts text using RSA asymmetric encryption."""
     if not key:
-        key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048
-        )
+        key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         public_key = key.public_key()
         # Generate public key and display it
-        public_key_pem = public_key.public_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
-        )
+        public_key_pem = public_key.public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo)
         st.write("Generated RSA Public Key:")
         st.code(public_key_pem.decode())
 
         # Generate private key in PKCS#1 format and display it
-        private_key_pem = key.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.TraditionalOpenSSL,
-            encryption_algorithm=serialization.NoEncryption()
-        )
+        private_key_pem = key.private_bytes(encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.TraditionalOpenSSL, encryption_algorithm=serialization.NoEncryption())
         st.write("Generated RSA Secret Key:")
         st.code(private_key_pem.decode())
     if if_decrypt:
@@ -238,16 +228,8 @@ def rsa_encrypt_decrypt(text, key, if_decrypt):
         if isinstance(key, str):
             key = key.encode()
         public_key = serialization.load_pem_public_key(key)
-        encrypted_text = public_key.encrypt(
-            text.encode(),
-            padding.OAEP(
-                mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                algorithm=hashes.SHA256(),
-                label=None
-            )
-        )
+        encrypted_text = public_key.encrypt(text.encode(), padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
         return base64.b64encode(encrypted_text).decode(), None, key
-
 
 def hash_text(text, algorithm):
     """Hashes the text using the specified algorithm."""
