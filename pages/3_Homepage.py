@@ -26,7 +26,6 @@ def main():
     crypto_options = [
         "Homepage",
         "Caesar Cipher",
-        "Fernet Symmetric Encryption",
         "Symmetric File Encryption",
         "RSA Asymmetric Encryption",
         "SHA-1 Hashing",
@@ -44,8 +43,6 @@ def main():
         text = st.text_area("Enter Text")
         if selected_crypto == "Caesar Cipher":
             shift_key = st.number_input("Shift Key (Caesar Cipher)", min_value=1, max_value=25, step=1, value=3)
-        if selected_crypto == "Fernet Symmetric Encryption":
-            key = st.text_input("Enter Encryption Key")
         elif selected_crypto == "RSA Asymmetric Encryption":
             key = st.text_area("Enter Public Key (Encryption) / Private Key (Decryption)")
         if_decrypt = st.checkbox("Decrypt")
@@ -91,21 +88,6 @@ def main():
                     processed_text = hash_text(text, "md5")
                 else:
                     processed_text = hash_file(file_uploaded, "md5")
-
-            elif selected_crypto == "Symmetric File Encryption":
-                if file_uploaded is not None:
-                    original_filename = file_uploaded.name
-                    if if_decrypt:
-                        decrypted_data, filename = fernet_file_decrypt(file_uploaded, key, original_filename)
-                        if decrypted_data:
-                            st.download_button("Download Decrypted File", decrypted_data, file_name=filename)
-                    else:
-                        encrypted_data, file_hash = fernet_file_encrypt(file_uploaded, key)
-                        if encrypted_data:
-                            st.write(f"Encrypted file hash: {file_hash}")
-                            st.download_button("Download Encrypted File", encrypted_data, file_name="Decrypted_" + original_filename)
-                else:
-                    processed_text = "No file uploaded."
 
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
@@ -200,30 +182,6 @@ def hash_file(file, algorithm):
         hash_function.update(data)
     file.seek(0)  # Reset file pointer to beginning after hashing
     return hash_function.hexdigest()
-def fernet_file_encrypt(file_uploaded, key):
-    """Encrypts a file using Fernet symmetric encryption."""
-    if not key:
-        raise ValueError("Please provide an encryption key.")
-    fernet = Fernet(key.encode())
-    file_data = file_uploaded.read()
-    encrypted_data = fernet.encrypt(file_data)
-    # Generate a random filename to avoid conflicts
-    filename = f"encrypted_{random.randint(100000,999999)}"
-    return encrypted_data, filename
-
-
-def fernet_file_decrypt(file_uploaded, key, original_filename):
-    """Decrypts a file using Fernet symmetric encryption."""
-    if not key:
-        raise ValueError("Please provide a decryption key.")
-    fernet = Fernet(key.encode())
-    try:
-        decrypted_data = fernet.decrypt(file_uploaded.read())
-    except fernet.InvalidKey:
-        st.error("Invalid decryption key. Please check the key and try again.")
-        return None, None
-    return decrypted_data, original_filename  # Return original filename for download
-
 
 if __name__ == "__main__":
     main()
