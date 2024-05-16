@@ -223,3 +223,8 @@ def fernet_file_decrypt(file_uploaded, key, original_filename):
         st.error("Invalid decryption key. Please check the key and try again.")
         return None, None
     return decrypted_data, original_filename  # Return original filename for download
+
+
+if __name__ == "__main__":
+    main()
+
