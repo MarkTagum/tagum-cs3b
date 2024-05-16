@@ -92,13 +92,8 @@ if generate_keypair:
     bob = ElGamal(p, g, None)
     public_key, private_key = bob.generate_keypair(q)
     st.success("Key pair generated!")
-    st.write("Public Key:", public_key)
+    st.write("Public Key:", public_key)  # Public key is a tuple (p, g, h)
     st.write("**Private Key (Keep Secret):**", private_key)  # Emphasize secrecy
-    # Assign generated values to variables to use later (if decryption is chosen)
-    public_key_p = p
-    public_key_g = g
-    public_key_h = public_key[2]  # Extract h from the generated public key
-
 else:
   # Input fields for pre-generated keys
   public_key_p = st.number_input("Public Key - p", min_value=11)
