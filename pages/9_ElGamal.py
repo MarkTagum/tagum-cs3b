@@ -94,6 +94,11 @@ if generate_keypair:
     st.success("Key pair generated!")
     st.write("Public Key:", public_key)
     st.write("**Private Key (Keep Secret):**", private_key)  # Emphasize secrecy
+    # Assign generated values to variables to use later (if decryption is chosen)
+    public_key_p = p
+    public_key_g = g
+    public_key_h = public_key[2]  # Extract h from the generated public key
+
 else:
   # Input fields for pre-generated keys
   public_key_p = st.number_input("Public Key - p", min_value=11)
@@ -111,31 +116,16 @@ if encryption_mode == "Encrypt":
     st.success("Encryption successful!")
     st.write("Ciphertext (c1, c2):", (c1, c2))
 elif encryption_mode == "Decrypt" and private_key:
-  c1 = st.number_input("Ciphertext - c1")
-  c2 = st.number_input("Ciphertext - c2")
-  if c1 and c2 and public_key_p:  # Check if public_key_p is defined before using
-    bob = ElGamal(public_key_p, public_key_g, int(private_key))  # Private key needed for decryption
-    decrypted_message = bob.decrypt(c1, c2)
-    st.success("Decryption successful!")
-    st.write("Decrypted Message:", decrypted_message)
+  # Ensure all public key components are available (even if generated earlier)
+  if public_key_p and public_key_g and public_key_h:
+    c1 = st.number_input("Ciphertext - c1")
+    c2 = st.number_input("Ciphertext - c2")
+    if c1 and c2:
+      bob = ElGamal(public_key_p, public_key_g, int(private_key))  # Private key needed for decryption
+      decrypted_message = bob.decrypt(c1, c2)
+      st.success("Decryption successful!")
+      st.write("Decrypted Message:", decrypted_message)
+    else:
+      st.warning("Please enter both c1 and c2 values for decryption.")
   else:
-    st.warning("Please enter both c1 and c2 values for decryption. Also, ensure you have the Public Key (p) if using pre-generated keys.")
-# Encryption section
-encryption_mode = st.radio("Mode", ("Encrypt", "Decrypt"))
-if encryption_mode == "Encrypt":
-  message = st.text_input("Enter message to encrypt")
-  if message and (public_key_p and public_key_g and public_key_h):
-    bob = ElGamal(public_key_p, public_key_g, None)  # Only public key needed for encryption
-    c1, c2 = bob.encrypt(message, random.randint(1, public_key_p - 1))
-    st.success("Encryption successful!")
-    st.write("Ciphertext (c1, c2):", (c1, c2))
-elif encryption_mode == "Decrypt" and private_key:
-  c1 = st.number_input("Ciphertext - c1")
-  c2 = st.number_input("Ciphertext - c2")
-  if c1 and c2:
-    bob = ElGamal(public_key_p, public_key_g, int(private_key))  # Private key needed for decryption
-    decrypted_message = bob.decrypt(c1, c2)
-    st.success("Decryption successful!")
-    st.write("Decrypted Message:", decrypted_message)
-  else:
-    st.warning("Please enter both c1 and c2 values for decryption.")
+      st.warning("Ensure you have all Public Key components (p, g, h) for decryption.")
