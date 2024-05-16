@@ -46,8 +46,5 @@ def main():
   st.write("Alice's Shared Secret:", alice_shared_secret)
   st.write("Bob's Shared Secret:", bob_shared_secret)
 
-  # Inform users about using the shared secret for secure communication
-  st.info("**Note:** The shared secret can be used as a key for secure communication after it is securely exchanged between Alice and Bob.")
-
 if __name__ == "__main__":
   main()
