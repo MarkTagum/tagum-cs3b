@@ -84,6 +84,10 @@ st.title("ElGamal Encryption/Decryption")
 
 # Key generation (optional, pre-generated keys can be used)
 generate_keypair = st.checkbox("Generate Key Pair", value=False)
+public_key_p = None  # Initialize public_key_p to None to avoid undefined variable error
+public_key_g = None  # Initialize public_key_g to None
+public_key_h = None  # Initialize public_key_h to None
+
 if generate_keypair:
   p = st.number_input("Prime Number (p)", min_value=11)  # Small for demo, use larger primes in practice
   g = st.number_input("Generator Element (g)", min_value=2)
@@ -92,8 +96,13 @@ if generate_keypair:
     bob = ElGamal(p, g, None)
     public_key, private_key = bob.generate_keypair(q)
     st.success("Key pair generated!")
-    st.write("Public Key:", public_key)  # Public key is a tuple (p, g, h)
+    st.write("Public Key:", public_key)
     st.write("**Private Key (Keep Secret):**", private_key)  # Emphasize secrecy
+    # Assign generated values to variables
+    public_key_p = p
+    public_key_g = g
+    public_key_h = public_key[2]  # Extract h from the generated public key
+
 else:
   # Input fields for pre-generated keys
   public_key_p = st.number_input("Public Key - p", min_value=11)
@@ -105,6 +114,7 @@ else:
 encryption_mode = st.radio("Mode", ("Encrypt", "Decrypt"))
 if encryption_mode == "Encrypt":
   message = st.text_input("Enter message to encrypt")
+  # Ensure all public key components are available before encryption
   if message and (public_key_p and public_key_g and public_key_h):
     bob = ElGamal(public_key_p, public_key_g, None)  # Only public key needed for encryption
     c1, c2 = bob.encrypt(message, random.randint(1, public_key_p - 1))
