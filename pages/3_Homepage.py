@@ -26,7 +26,6 @@ def main():
     crypto_options = [
         "Homepage",
         "Caesar Cipher",
-        "Symmetric File Encryption",
         "RSA Asymmetric Encryption",
         "SHA-1 Hashing",
         "SHA-256 Hashing",
@@ -54,18 +53,11 @@ def main():
         else:
             file_uploaded = st.file_uploader("Upload a file")
 
-    if selected_crypto == "Symmetric File Encryption":
-        file_uploaded = st.file_uploader("Upload a file")
-        key = st.text_input("Enter Encryption Key")
-        if_decrypt = st.checkbox("Decrypt")
-
     if st.button("Submit"):
         processed_text = ""
         try:
             if selected_crypto == "Caesar Cipher":
                 processed_text, _, _ = caesar_cipher(text, shift_key, if_decrypt)
-            elif selected_crypto == "Fernet Symmetric Encryption":
-                processed_text, _, _ = fernet_encrypt_decrypt(text, key, if_decrypt)
             elif selected_crypto == "RSA Asymmetric Encryption":
                 processed_text, _, _ = rsa_encrypt_decrypt(text, key, if_decrypt)
             elif selected_crypto == "SHA-1 Hashing":
@@ -109,17 +101,6 @@ def caesar_cipher(text, shift_key, if_decrypt):
         else:
             result += char
     return result, None, None  # Caesar Cipher doesn't generate keys
-
-def fernet_encrypt_decrypt(text, key, if_decrypt):
-    """Encrypts or decrypts text using the Fernet symmetric encryption."""
-    if not key:
-        key = Fernet.generate_key()
-        st.write("Generated Fernet Secret Key:", key.decode())
-    fernet = Fernet(key.encode())
-    if if_decrypt:
-        return fernet.decrypt(text.encode()).decode(), None, None
-    else:
-        return fernet.encrypt(text.encode()).decode(), key, None
 
 def rsa_encrypt_decrypt(text, key, if_decrypt):
     """Encrypts or decrypts text using RSA asymmetric encryption."""
