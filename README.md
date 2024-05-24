@@ -1,6 +1,6 @@
 # Welcome to streamlit
 
-by: MARK B. TAGUM
+by: MARK B. TAGUM, MARRI GRACE MORATA, CECIL DAGON
 
 [My published app](https://curly-goldfish-69gx5x65747gf4vqg-8501.app.github.dev)
 
